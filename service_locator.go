@@ -78,13 +78,6 @@ func (sl *ServiceLocator) getPerLookup(service *Service) (interface{}, error) {
 // @return error
 //
 func (sl *ServiceLocator) Register(service *Service) error {
-	// 多实例
-	if service.HasScope(PerLookup) {
-		sl.services[service.name] = service
-
-		return nil
-	}
-
 	// 单例
 	if service.HasScope(Singleton) {
 		// 立即创建
@@ -94,6 +87,13 @@ func (sl *ServiceLocator) Register(service *Service) error {
 			}
 		}
 
+		sl.services[service.name] = service
+
+		return nil
+	}
+
+	// 多实例
+	if service.HasScope(PerLookup) {
 		sl.services[service.name] = service
 
 		return nil
