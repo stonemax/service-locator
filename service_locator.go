@@ -2,6 +2,7 @@ package ServiceLocator
 
 import (
 	"fmt"
+	"sync"
 )
 
 // ServiceLocator 服务定位器
@@ -48,15 +49,16 @@ func (sl *ServiceLocator) getSingleton(service *Service) (interface{}, error) {
 	// 执行创建
 	service.onceLocker.Do(func() {
 		service.instance, service.createError = service.creator(sl)
+
+		if service.createError != nil {
+			service.instance = nil
+			service.onceLocker = new(sync.Once)
+		}
 	})
 
 	// 创建失败
 	if service.createError != nil {
-		err := service.createError
-
-		service.reset()
-
-		return nil, err
+		return nil, service.createError
 	}
 
 	return service.instance, nil

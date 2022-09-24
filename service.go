@@ -65,20 +65,6 @@ func (s *Service) HasScope(scope int) bool {
 }
 
 //
-// reset
-// @desc 重置服务
-// @receiver s *Service
-//
-func (s *Service) reset() {
-	s.instance = nil
-	s.createError = nil
-
-	if s.onceLocker != nil {
-		s.onceLocker = new(sync.Once)
-	}
-}
-
-//
 // NewService
 // @desc 创建服务
 // @param name string
