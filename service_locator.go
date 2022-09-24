@@ -52,7 +52,11 @@ func (sl *ServiceLocator) getSingleton(service *Service) (interface{}, error) {
 
 	// 创建失败
 	if service.createError != nil {
-		return nil, service.createError
+		err := service.createError
+
+		service.reset()
+
+		return nil, err
 	}
 
 	return service.instance, nil
